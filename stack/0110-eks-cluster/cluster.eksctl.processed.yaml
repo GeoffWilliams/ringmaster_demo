@@ -1,0 +1,61 @@
+# This file was automatically generated from file: ./stack/0110-eks-cluster/cluster.eksctl.yaml, do not edit!
+# An example of ClusterConfig object creating Fargate profiles.
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ringmasterdemo
+  region: us-west-1
+  version: "1.18"
+
+availabilityZones:
+  - us-west-1a
+  - us-west-1b
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+    # aws-load-balancer
+    - metadata:
+        name: aws-load-balancer-controller
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::581165678935:policy/AWSLoadBalancerController
+    - metadata:
+        name: external-secrets-kubernetes-external-secrets
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::581165678935:policy/EksExternalSecrets
+    - metadata:
+        name: ambassador-service
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::581165678935:policy/AWSLoadBalancerController
+    - metadata:
+        name: external-dns
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::581165678935:policy/ExternalDns
+    - metadata:
+        name: certbot-service
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::581165678935:policy/Certbot
+
+
+vpc:
+  cidr: 192.168.0.0/16
+  nat:
+    gateway: HighlyAvailable
+
+
+fargateProfiles:
+  - name: fp-default
+    selectors:
+      # All workloads in the "default" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: default
+      # All workloads in the "kube-system" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: kube-system

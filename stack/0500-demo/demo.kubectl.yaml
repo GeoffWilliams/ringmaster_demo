@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  demo
+
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: demo
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+spec:
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+        - name: demo
+          image: httpd:2.4.46-alpine
+          env:
+            - name: CLUSTER_NAME
+              value: ${cluster_name}
+          ports:
+            - containerPort: 80
+
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  name: demo
+  annotations:
+    kubernetes.io/ingress.class: ambassador
+  labels:
+    app.kubernetes.io/name: demo
+spec:
+  # Were not setting up TLS in this example but lets just leave thisw here...
+  #tls:
+  #  - hosts:
+  #      - demo.automateorbeautomated.com
+  #    # https://github.com/datawire/ambassador/issues/1255
+  #    secretName: tls-demo-automateorbeautomated-com
+  rules:
+    - host: demo.automateorbeautomated.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: demo
+              servicePort: 80

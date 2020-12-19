@@ -1,0 +1,17 @@
+cluster_name: ringmasterdemo
+aws_region: us-west-1
+aws_account_id: changeme
+aws_load_balancer_controller_service_name: aws-load-balancer-controller
+eks_external_secrets_service_name: external-secrets-kubernetes-external-secrets
+ambassador_service_name: ambassador-service
+cert_manager_service_name: cert-manager
+external_dns_service_name: external-dns
+certbot_service_name: certbot-service
+
+# fixme - how to have a single list? (any ideas dear reader)
+# ekcsctl uses individual zones...
+availability_zone_a: us-west-1a
+availability_zone_b: us-west-1b
+# cloudformation needs a string...
+availability_zones: us-west-1a,us-west-1b
+kubernetes_version: "1.18"

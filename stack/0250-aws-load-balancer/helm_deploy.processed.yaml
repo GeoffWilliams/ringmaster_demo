@@ -1,0 +1,12 @@
+# This file was automatically generated from file: ./stack/0250-aws-load-balancer/helm_deploy.yaml, do not edit!
+repos:
+  eks: https://aws.github.io/eks-charts
+name: aws-load-balancer-controller
+namespace: kube-system
+install: eks/aws-load-balancer-controller
+set:
+  - clusterName=ringmasterdemo
+  - serviceAccount.create=false
+  - serviceAccount.name=aws-load-balancer-controller
+  - region=us-west-1
+  - vpcId=vpc-0c504a23e84111790
